@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { deposit, withdraw } from "./redux/store";
+import { deposit, withdraw } from "./redux/balanceSlice";
 import LangSwitcher from "./components/LangSwitcher";
 
 export const App = () => {
