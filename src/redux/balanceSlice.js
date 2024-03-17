@@ -1,34 +1,33 @@
-export const deposit = (value) => {
-  return {
-    type: "balance/deposit",
-    payload: value,
-  };
-};
+import { createSlice } from "@reduxjs/toolkit";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-export const withdraw = (value) => {
-  return {
-    type: "balance/withdraw",
-    payload: value,
-  };
-};
+const balanceSlice = createSlice({
+  name: "balance",
+  initialState: {
+    value: 0,
+    a: 1,
+    b: 2,
+  },
+  reducers: {
+    deposit: (state, action) => {
+      state.value += action.payload;
+    },
+    withdraw: (state, action) => {
+      state.value -= action.payload;
+    },
+  },
+});
 
-const balanceInitialSatte = {
-  value: 0,
-};
+export const { deposit, withdraw } = balanceSlice.actions;
 
-export const balanceReduser = (state = balanceInitialSatte, action) => {
-  switch (action.type) {
-    case "balance/deposit":
-      return {
-        ...state,
-        value: state.value + action.payload,
-      };
-    case "balance/withdraw":
-      return {
-        ...state,
-        value: state.value - action.payload,
-      };
-    default:
-      return state;
-  }
+const persistConfig = {
+  key: "balance",
+  storage,
+  whitelist: ["value"],
+  blacklist: ["b"],
 };
+export const balanceReduser = persistReducer(
+  persistConfig,
+  balanceSlice.reducer
+);

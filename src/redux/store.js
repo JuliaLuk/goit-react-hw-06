@@ -1,11 +1,27 @@
-import { combineReducers, createStore } from "redux";
-import { devToolsEnhancer } from "@redux-devtools/extension";
+import { configureStore } from "@reduxjs/toolkit";
 import { balanceReduser } from "./balanceSlice";
 import { localeReduser } from "./localeSlice";
+import {
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 
-const rootReduser = combineReducers({
-  balance: balanceReduser,
-  locale: localeReduser,
+export const store = configureStore({
+  reducer: {
+    balance: balanceReduser,
+    locale: localeReduser,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
-export const store = createStore(rootReduser, devToolsEnhancer());
+export const persistor = persistStore(store);
